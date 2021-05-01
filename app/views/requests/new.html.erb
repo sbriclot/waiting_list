@@ -1,0 +1,14 @@
+<div class="container mb-4">
+  <h2>Please enter the following information</h2>
+
+  <%= simple_form_for (@request) do |f| %>
+    <%= f.input :name %>
+    <%= f.input :email %>
+    <%= f.input :phone %>
+    <div>
+      <%= f.input :bio, maxlength: @bio_max_length %>
+      <span id="bio-max-length" data-bio-max-length="<%= @bio_max_length %>"></span>
+    </div>
+    <%= f.submit "Validate", class: "btn btn-primary" %>
+  <% end %>
+</div>
