@@ -10,9 +10,40 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2021_05_01_100832) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "confirmations", force: :cascade do |t|
+    t.bigint "request_id", null: false
+    t.string "validation_key", limit: 16, null: false
+    t.integer "reply_delay", limit: 2, null: false
+    t.datetime "replied_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["request_id"], name: "index_confirmations_on_request_id"
+  end
+
+  create_table "delays", force: :cascade do |t|
+    t.string "name", limit: 30
+    t.integer "value", limit: 2
+    t.string "description", limit: 150
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "requests", force: :cascade do |t|
+    t.string "name", limit: 50, null: false
+    t.string "email", limit: 50, null: false
+    t.string "phone", limit: 10, null: false
+    t.string "bio", limit: 400, null: false
+    t.boolean "confirmed"
+    t.datetime "accepted_at"
+    t.datetime "expired_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  add_foreign_key "confirmations", "requests"
 end
