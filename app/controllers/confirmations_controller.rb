@@ -1,13 +1,26 @@
 class ConfirmationsController < ApplicationController
   def req_confirmation
     @confirmation = Confirmation.find_by(validation_key: params["key"])
+    @request = Request.find(@confirmation.id)
     @replied = Time.now
     if @replied.to_date <= @confirmation.created_at.to_date + @confirmation.reply_delay.days
-      @confirmation.update(replied_at: @replied)
-      Request.update(@confirmation.request_id, confirmed: true)
-      redirect_to validated_path
+      reply_validated
     else
-      redirect_to too_late_path
+      reply_too_late
     end
+  end
+
+  private
+
+  def reply_validated
+    @confirmation.update(replied_at: @replied)
+    @request.update(confirmed: true)
+    redirect_to validated_path
+  end
+
+  def reply_too_late
+    @confirmation.update(replied_at: @replied)
+    @request.update(expired_at: @replied) unless @request.expired_at
+    redirect_to too_late_path
   end
 end
