@@ -1,0 +1,6 @@
+<h2>Request Validation</h2>
+<p>Your request was saved but you have to confirm it now.</p>
+<p>Please note that this mail will become invalid after <strong><%= pluralize(@reply_delay, 'day') %></strong>.</p>
+<p>After this delay, your request will be automatically canceled.</p>
+
+<%= link_to "Click here to confirm", confirmation_url(key: @confirmation.validation_key), class: 'btn btn-primary mt-3' %>

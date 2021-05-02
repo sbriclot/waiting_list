@@ -1,5 +1,5 @@
 class ConfirmationsController < ApplicationController
-  def req_confirmation
+  def confirmation
     @confirmation = Confirmation.find_by(validation_key: params["key"])
     @request = Request.find(@confirmation.id)
     @replied = Time.now
