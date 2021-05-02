@@ -8,11 +8,11 @@ class RequestsController < ApplicationController
     @request = Request.new(request_params)
     if @request.save
       @reply_delay = Delay.find_by(name: 'confirmation_validity').value
-      Confirmation.create(request_id: @request.id,
-        validation_key: SecureRandom.hex(8),
+      @confirmation = Confirmation.create(request_id: @request.id,
+        validation_key: SecureRandom.hex(16),
         reply_delay: @reply_delay
       )
-      redirect_to saved_path(delay: @reply_delay)
+      redirect_to saved_path(delay: @reply_delay, key: @confirmation.validation_key)
     else
       render :new
     end
