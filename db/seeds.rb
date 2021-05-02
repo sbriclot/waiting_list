@@ -18,12 +18,12 @@ Delay.create(name: 'reconfirmation_validity',
 
 today = Time.now
 
-# 3. create a request already validated and accpted
+# 3. create a request already validated and accepted
 p "Insert 1 accepted request..."
 creation_date = today - Random.new.rand(5..10).days
 req1 = Request.new(name: 'Etienne',
   email: 'etienne@mail.com',
-  phone: 0601020304,
+  phone: '0601020304',
   bio: 'PL/SQL expert',
   confirmed: true,
   accepted_at: creation_date + 1.hours,
@@ -31,16 +31,16 @@ req1 = Request.new(name: 'Etienne',
   updated_at: creation_date)
 req1.save
 Confirmation.create(request_id: req1.id,
-  validation_key: SecureRandom.hex(8),
+  validation_key: SecureRandom.hex(16),
   reply_delay: 1,
   replied_at: req1.accepted_at)
 
-# 4. create a request already expired and accpted
+# 4. create a request already expired
 p "Insert 1 expired request..."
 creation_date = today - Random.new.rand(5..10).days
 req2 = Request.new(name: 'Steve',
   email: 'steve@mail.com',
-  phone: 0611121314,
+  phone: '0611121314',
   bio: 'PL/SQL addict',
   confirmed: false,
   expired_at: creation_date + 1.days,
@@ -48,22 +48,22 @@ req2 = Request.new(name: 'Steve',
   updated_at: creation_date)
 req2.save
 Confirmation.create(request_id: req2.id,
-  validation_key: SecureRandom.hex(8),
+  validation_key: SecureRandom.hex(16),
   reply_delay: 1)
 
-# 5. create a request already expired and accpted
+# 5. create a 3 months old request to reconfirm
 p "Insert 1 3 months old request..."
 creation_date = today - 3.months
 req3 = Request.new(name: 'Stéphane',
   email: 'vtorrey.wesleeyh@moyencuen.buzz',
-  phone: 0621222324,
+  phone: '0621222324',
   bio: 'PL/SQL addict',
   confirmed: true,
   created_at: creation_date,
   updated_at: creation_date)
 req3.save
 Confirmation.create(request_id: req3.id,
-  validation_key: SecureRandom.hex(8),
+  validation_key: SecureRandom.hex(16),
   reply_delay: 1,
   replied_at: req3.created_at + 2.hours)
 
