@@ -33,7 +33,6 @@ gem 'font-awesome-sass'
 gem 'simple_form'
 
 gem 'bootstrap-email'
-gem 'postmark-rails'
 
 group :development, :test do
   gem 'pry-byebug'
