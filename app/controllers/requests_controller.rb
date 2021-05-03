@@ -1,7 +1,9 @@
 class RequestsController < ApplicationController
+  BIO_MAX_LENGTH = Request.validators_on( :bio ).first.options[:maximum]
+
   def new
     @request = Request.new
-    @bio_max_length = Request.validators_on( :bio ).first.options[:maximum]
+    @bio_max_length = BIO_MAX_LENGTH
   end
 
   def create
@@ -9,6 +11,7 @@ class RequestsController < ApplicationController
     if @request.save
       send_mail
     else
+      @bio_max_length = BIO_MAX_LENGTH
       render :new
     end
   end
