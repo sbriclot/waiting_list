@@ -6,7 +6,6 @@ class RequestMailer < ApplicationMailer
   #   en.request_mailer.confirmation.subject
   #
   def confirmation
-    @reply_delay = params[:reply_delay]
     @confirmation = params[:confirmation]
 
     make_bootstrap_mail(to: @confirmation.request.email,

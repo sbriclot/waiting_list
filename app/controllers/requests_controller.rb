@@ -7,14 +7,6 @@ class RequestsController < ApplicationController
   def create
     @request = Request.new(request_params)
     if @request.save
-      # @reply_delay = Delay.find_by(name: 'confirmation_validity').value
-      # @confirmation = Confirmation.create(request_id: @request.id,
-      #   validation_key: SecureRandom.hex(16),
-      #   reply_delay: @reply_delay
-      # )
-      # mail = RequestMailer.with(confirmation: @confirmation, reply_delay: @reply_delay).confirmation
-      # mail.deliver_now
-      # redirect_to saved_path(delay: @reply_delay)
       send_mail
     else
       render :new
@@ -24,14 +16,13 @@ class RequestsController < ApplicationController
   private
 
   def send_mail
-    @reply_delay = Delay.find_by(name: 'confirmation_validity').value
     @confirmation = Confirmation.create(request_id: @request.id,
       validation_key: SecureRandom.hex(16),
-      reply_delay: @reply_delay
+      reply_delay: Delay.find_by(name: 'confirmation_validity').value
     )
-    mail = RequestMailer.with(confirmation: @confirmation, reply_delay: @reply_delay).confirmation
+    mail = RequestMailer.with(confirmation: @confirmation).confirmation
     mail.deliver_now
-    redirect_to saved_path(delay: @reply_delay)
+    redirect_to saved_path(delay: @confirmation.reply_delay)
   end
 
   def request_params
