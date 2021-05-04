@@ -1,0 +1,74 @@
+[
+  {
+    "name": "blanche",
+    "bio": "8 months old, accepted",
+    "confirmed": true,
+    "accepted": true,
+    "m": -8,
+    "d": 0,
+    "h": 0
+  },
+  {
+    "name": "prof",
+    "bio": "6 months and 1 day old, confirmed, 1st reminder ok, 2nd to send",
+    "confirmed": true,
+    "accepted": false,
+    "m": -6,
+    "d": -1,
+    "h": 0
+  },
+  {
+    "name": "simplet",
+    "bio": "3 months and 4 days old, confirmed, 2nd reminder sent, no reply",
+    "confirmed": true,
+    "accepted": false,
+    "m": -3,
+    "d": -4,
+    "h": 0
+  },
+  {
+    "name": "grincheux",
+    "bio": "3 months and 1 day old, confirmed, 1st reminder to send",
+    "confirmed": true,
+    "accepted": false,
+    "m": -3,
+    "d": -1,
+    "h": 0
+  },
+  {
+    "name": "timide",
+    "bio": "1 week old, confirmed",
+    "confirmed": true,
+    "accepted": false,
+    "m": 0,
+    "d": -7,
+    "h": 0
+  },
+  {
+    "name": "joyeux",
+    "bio": "2 days old, no reply",
+    "confirmed": false,
+    "accepted": false,
+    "m": 0,
+    "d": -2,
+    "h": 0
+  },
+  {
+    "name": "atchoum",
+    "bio": "1 day old, more than 24hrs",
+    "confirmed": false,
+    "accepted": false,
+    "m": 0,
+    "d": -1,
+    "h": -2
+  },
+  {
+    "name": "dormeur",
+    "bio": "1 day old, less than 24hrs",
+    "confirmed": false,
+    "accepted": false,
+    "m": 0,
+    "d": -1,
+    "h": 2
+  }
+]

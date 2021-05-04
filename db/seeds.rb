@@ -1,70 +1,74 @@
+require 'json'
+
+# keep start time of the seed 
+@batch = Time.now
+
 # 1. clean all the tables
-p "Clean DB..."
+p 'Clean DB...'
 Confirmation.delete_all
 Request.delete_all
 Delay.delete_all
 
-# 2. insert the parameters
-p "Insert the default Delays..."
-Delay.create(name: 'req_reconfirmation',
-  value: 3,
-  description: 'Delay between 2 validation email, in months')
-Delay.create(name: 'confirmation_validity',
-  value: 1,
-  description: 'Validity duration of the link for the first confirmation mail, in_days')
-Delay.create(name: 'reconfirmation_validity',
-  value: 3,
-  description: 'Validity duration of the link for the reconfirmations mail, in days')
+# 2. insert the default delays
+p 'Insert the default Delays...'
+file = File.join(File.dirname(__FILE__), "./delays.json")
+delays = JSON.parse(File.read(file))
 
-today = Time.now
+delays.each do |delay|
+  p "  Inserting #{delay["name"]}..."
+  Delay.create(
+    name: delay["name"],
+    value: delay["value"],
+    description: delay["desc"])
+end
 
-# 3. create a request already validated and accepted
-p "Insert 1 accepted request..."
-creation_date = today - Random.new.rand(5..10).days
-req1 = Request.new(name: 'Etienne',
-  email: 'etienne@mail.com',
-  phone: '0601020304',
-  bio: 'PL/SQL expert',
-  confirmed: true,
-  accepted_at: creation_date + 1.hours,
-  created_at: creation_date,
-  updated_at: creation_date)
-req1.save
-Confirmation.create(request_id: req1.id,
-  validation_key: SecureRandom.hex(16),
-  reply_delay: 1,
-  replied_at: req1.accepted_at)
+# 3. store delays
+conf_interval = Delay.find_by(name: 'req_reconfirmation').value
+first_conf = Delay.find_by(name: 'confirmation_validity').value
+reconf = Delay.find_by(name: 'reconfirmation_validity').value
 
-# 4. create a request already expired
-p "Insert 1 expired request..."
-creation_date = today - Random.new.rand(5..10).days
-req2 = Request.new(name: 'Steve',
-  email: 'steve@mail.com',
-  phone: '0611121314',
-  bio: 'PL/SQL addict',
-  confirmed: false,
-  expired_at: creation_date + 1.days,
-  created_at: creation_date,
-  updated_at: creation_date)
-req2.save
-Confirmation.create(request_id: req2.id,
-  validation_key: SecureRandom.hex(16),
-  reply_delay: 1)
+# 3. insert requests/confirmations
+p 'Insert the requests and confirmations...'
+file = File.join(File.dirname(__FILE__), "./cases.json")
+requests = JSON.parse(File.read(file))
 
-# 5. create a 3 months old request to reconfirm
-p "Insert 1 3 months old request..."
-creation_date = today - 3.months
-req3 = Request.new(name: 'Stéphane',
-  email: 'vtorrey.wesleeyh@moyencuen.buzz',
-  phone: '0621222324',
-  bio: 'PL/SQL addict',
-  confirmed: true,
-  created_at: creation_date,
-  updated_at: creation_date)
-req3.save
-Confirmation.create(request_id: req3.id,
-  validation_key: SecureRandom.hex(16),
-  reply_delay: 1,
-  replied_at: req3.created_at + 2.hours)
+def insert_conf(p_req_id, p_creation_date, p_delay)
+  new_conf = Confirmation.create(
+    request_id: p_req_id,
+    validation_key: SecureRandom.hex(16),
+    reply_delay: p_delay,
+    created_at: p_creation_date,
+    updated_at: p_creation_date
+  )
+  new_conf.update(replied_at: new_conf.created_at + 30.minutes) if @batch.to_date - (p_delay + 2) > new_conf.created_at.to_date
+end
 
-  
+requests.each do |request|
+  p "  Inserting #{request["name"]} (#{request["bio"]})..."
+  creation_date = @batch + request["m"].month + request["d"].day + request["h"].hour
+  new_request = Request.create(
+    name: request["name"],
+    email: "#{request["name"]}@nains.com",
+    phone: '0601020304',
+    bio: request["bio"],
+    confirmed: request["confirmed"],
+    created_at: creation_date,
+    updated_at: creation_date
+  )
+  new_request.update(accepted_at: creation_date + 1.hour) if request["accepted"]
+
+  p "    Inserting the first confirmation..."
+  insert_conf(new_request.id, creation_date, first_conf)
+
+  p "    Inserting the addtionnal confirmations, if needed..."
+  unless request["accepted"]
+    months = request["m"]
+    days = request["d"]
+    hours = request["h"]
+    while (months < -1 * conf_interval) or ((months == -1 * conf_interval) and (days < -1 * reconf))
+      months += conf_interval
+      creation_date = @batch + months.month + days.day + hours.hour
+      insert_conf(new_request.id, creation_date, reconf)
+    end
+  end
+end

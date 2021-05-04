@@ -1,0 +1,17 @@
+[
+  {
+    "name": "req_reconfirmation",
+    "value": 3,
+    "desc": "Delay between 2 validation email, in months"
+  },
+  {
+    "name": "confirmation_validity",
+    "value": 1,
+    "desc": "Validity duration of the link for the first confirmation mail, in_days"
+  },
+  {
+    "name": "reconfirmation_validity",
+    "value": 3,
+    "desc": "Validity duration of the link for the reconfirmations mail, in days"
+  }
+]
