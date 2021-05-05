@@ -1,7 +1,7 @@
 class ConfirmationsController < ApplicationController
   def confirmation
     @confirmation = Confirmation.find_by(validation_key: params["key"])
-    @request = Request.find(@confirmation.id)
+    @request = Request.find(@confirmation.request_id)
     @replied = Time.now
     if @replied.to_date <= @confirmation.created_at.to_date + @confirmation.reply_delay.days
       reply_validated
