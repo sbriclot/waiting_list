@@ -1,4 +1,5 @@
 class ExpiredJob < ApplicationJob
+  include LogUtils
   queue_as :default
 
   def perform(*args)
@@ -17,6 +18,7 @@ class ExpiredJob < ApplicationJob
 
     requests.each do |request|
       Request.find(request["id"]).update(expired_at: Time.now)
+      add_log(request["id"], "Request canceled by missing reply", "U")
     end
   end
 end

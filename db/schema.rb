@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_02_083128) do
+ActiveRecord::Schema.define(version: 2021_05_05_204943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,15 @@ ActiveRecord::Schema.define(version: 2021_05_02_083128) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "logs", force: :cascade do |t|
+    t.bigint "request_id"
+    t.string "task"
+    t.string "added_by"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["request_id"], name: "index_logs_on_request_id"
+  end
+
   create_table "requests", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -46,4 +55,5 @@ ActiveRecord::Schema.define(version: 2021_05_02_083128) do
   end
 
   add_foreign_key "confirmations", "requests"
+  add_foreign_key "logs", "requests"
 end

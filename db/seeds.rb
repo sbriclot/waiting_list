@@ -1,4 +1,5 @@
 require 'json'
+include LogUtils
 
 # keep start time of the seed 
 @batch = Time.now
@@ -41,6 +42,7 @@ def insert_conf(p_req_id, p_creation_date, p_delay)
     updated_at: p_creation_date
   )
   new_conf.update(replied_at: new_conf.created_at + 30.minutes) if @batch.to_date - (p_delay + 2) > new_conf.created_at.to_date
+  add_log(p_req_id, "Mail sent", "S")
 end
 
 requests.each do |request|
@@ -56,6 +58,7 @@ requests.each do |request|
     updated_at: creation_date
   )
   new_request.update(accepted_at: creation_date + 1.hour) if request["accepted"]
+  add_log(new_request.id, "New request added", "S")
 
   p "    Inserting the first confirmation..."
   insert_conf(new_request.id, creation_date, first_conf)
