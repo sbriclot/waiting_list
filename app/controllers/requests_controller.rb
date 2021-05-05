@@ -9,7 +9,9 @@ class RequestsController < ApplicationController
   def create
     @request = Request.new(request_params)
     if @request.save
-      send_mail
+      reply_delay = Delay.find_by(name: 'confirmation_validity').value
+      SendMailJob.perform_now(@request.id, reply_delay)
+      redirect_to saved_path(delay: reply_delay)
     else
       @bio_max_length = BIO_MAX_LENGTH
       render :new
@@ -17,16 +19,6 @@ class RequestsController < ApplicationController
   end
 
   private
-
-  def send_mail
-    @confirmation = Confirmation.create(request_id: @request.id,
-      validation_key: SecureRandom.hex(16),
-      reply_delay: Delay.find_by(name: 'confirmation_validity').value
-    )
-    mail = RequestMailer.with(confirmation: @confirmation).confirmation
-    mail.deliver_now
-    redirect_to saved_path(delay: @confirmation.reply_delay)
-  end
 
   def request_params
     params.require(:request).permit(:name, :email, :phone, :bio)

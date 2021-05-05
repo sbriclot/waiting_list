@@ -14,11 +14,11 @@ class Request < ApplicationRecord
   private
 
   def self.unconfirmed 
-    Request.where(confirmed: false)
+    Request.where(confirmed: false, accepted_at: nil, expired_at: nil)
   end
 
   def self.confirmed 
-    Request.where(confirmed: true)
+    Request.where(confirmed: true, accepted_at: nil, expired_at: nil)
   end
 
   def self.accepted
