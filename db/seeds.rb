@@ -6,6 +6,7 @@ include LogUtils
 
 # 1. clean all the tables
 p 'Clean DB...'
+Log.delete_all
 Confirmation.delete_all
 Request.delete_all
 Delay.delete_all
