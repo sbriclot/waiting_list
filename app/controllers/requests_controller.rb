@@ -1,6 +1,6 @@
 class RequestsController < ApplicationController
   include LogUtils
-  BIO_MAX_LENGTH = Request.validators_on( :bio ).first.options[:maximum]
+  BIO_MAX_LENGTH = Request.validators_on(:bio).first.options[:maximum]
 
   def new
     @request = Request.new
