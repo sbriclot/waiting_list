@@ -7,4 +7,5 @@ Rails.application.routes.draw do
   get 'saved', to: 'pages#saved'
   get 'validated', to: 'pages#validated'
   get 'too_late', to: 'pages#too_late'
+  get 'invalid_key', to: 'pages#invalid_key'
 end
