@@ -1,5 +1,10 @@
-Request Validation
-Your request was saved but you have to confirm it now.
+<% if @first_mail %>
+  Request Validation
+  Your request was saved but you have to confirm it now.
+<% else %>
+  Request Validation - Reminder
+  Your request is still on our waiting list, and you have to reconfirm your interest.
+<% end %>
 Please note that this mail will become invalid after <%= pluralize(@confirmation.reply_delay, 'day') %>.
 After this delay, your request will be automatically canceled.
 

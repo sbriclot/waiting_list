@@ -12,7 +12,7 @@ class RequestsController < ApplicationController
     if @request.save
       add_log(@request.id, "New request added", "U")
       reply_delay = Delay.find_by(name: 'confirmation_validity').value
-      SendMailJob.perform_now(@request.id, reply_delay)
+      SendMailJob.perform_now(@request.id, reply_delay, true)
       redirect_to saved_path(delay: reply_delay)
     else
       @bio_max_length = BIO_MAX_LENGTH
