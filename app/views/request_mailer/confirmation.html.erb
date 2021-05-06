@@ -1,5 +1,10 @@
-<h2>Request Validation</h2>
-<p>Your request was saved but you have to confirm it now.</p>
+<% if @first_mail %>
+  <h2>Request Validation</h2>
+  <p>Your request was saved but you have to confirm it now.</p>
+<% else %>
+  <h2>Request Validation - Reminder</h2>
+  <p>Your request is still on our waiting list, and you have to reconfirm your interest.</p>
+<% end %>
 <p>Please note that this mail will become invalid after <strong><%= pluralize(@confirmation.reply_delay, 'day') %></strong>.</p>
 <p>After this delay, your request will be automatically canceled.</p>
 

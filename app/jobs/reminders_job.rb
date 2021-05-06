@@ -10,7 +10,7 @@ class RemindersJob < ApplicationJob
     reply_delay = Delay.find_by(name: 'reconfirmation_validity').value
 
     reminders.each do |reminder|
-      SendMailJob.perform_now(reminder["id"], reply_delay)
+      SendMailJob.perform_now(reminder["id"], reply_delay, false)
     end
   end
 
