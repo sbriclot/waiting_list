@@ -2,8 +2,19 @@ class ExpiredJob < ApplicationJob
   include LogUtils
   queue_as :default
 
-  def perform(*args)
-    sql = %{
+  def perform
+    sql = sql_script
+
+    requests = ActiveRecord::Base.connection.exec_query(sql)
+
+    requests.each do |request|
+      Request.find(request["id"]).update(expired_at: Time.now)
+      add_log(request["id"], "Request canceled by missing reply", "J")
+    end
+  end
+
+  def sql_script
+    %{
       select r.id
       from   requests r
             ,confirmations c
@@ -13,12 +24,5 @@ class ExpiredJob < ApplicationJob
         and  c.replied_at is null
         and  current_date > c.created_at + (c.reply_delay||' days')::INTERVAL
     }
-
-    requests = ActiveRecord::Base.connection.exec_query(sql)
-
-    requests.each do |request|
-      Request.find(request["id"]).update(expired_at: Time.now)
-      add_log(request["id"], "Request canceled by missing reply", "U")
-    end
   end
 end
