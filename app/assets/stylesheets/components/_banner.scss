@@ -13,3 +13,16 @@
     font-size: 24px;
   }
 }
+
+@media(max-width: 540px) {
+  .banner {
+    height: 150px;
+    padding: 50px;
+    h1 {
+      font-size: 32px;
+    }
+    p {
+      font-size: 16px;
+    }
+  }
+}
