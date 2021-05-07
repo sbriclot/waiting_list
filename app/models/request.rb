@@ -7,8 +7,7 @@ class Request < ApplicationRecord
   validates :phone, format: { with: /\A(\+|0)\d+\z/, message: "Optional leading + and digits only please" }
 
   def accept!
-    self.accepted_at = Time.now
-    save
+    update(accepted_at: Time.now)
   end
 
   def self.unconfirmed
